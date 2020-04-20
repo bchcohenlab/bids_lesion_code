@@ -28,7 +28,7 @@ antsRegistrationSyNQuick.sh \
 	-d 3 \
 	-m $orig \
 	-f $T1w \
-	-t s \
+	-t br \
 	-o ${participant}_space-T1w_${tag}
 
 # remove non-BIDS suffix
