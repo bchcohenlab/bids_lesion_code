@@ -19,3 +19,7 @@ Optional (if not present, will assume last frame is b = 1000):
 
 Some of these scripts are from: https://neuroimaging-core-docs.readthedocs.io/, which is a GREAT collection of tutorials and examples.
 
+## Traced lesions should be named with the following pattern:
+`<bids_dir>/<participant_id>/dwi/<participant_id>_space-T1w_desc-lesion_mask.nii.gz`
+when we register these to MNI space, we will change the "space" descriptor:
+`<bids_dir>/<participant_id>/dwi/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`
