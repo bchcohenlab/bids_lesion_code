@@ -61,7 +61,17 @@ mkdir -p ${output_dwi_dir}
 ###
 # # Prepare the T1w (and T2w/FLAIR if present):
 pushd ${output_anat_dir}
-cp ${input_T1w} .
+
+# Copy over the T1w, or make one if only clinical scans
+if [ -f "$input_T1w" ]; then
+ 	cp $input_T1w .
+else
+	echo "*** No single T1w found, making a consolidated one from ax and sag T1w ***"
+	cp ${bids_dir}/${participant}/anat/${participant}_acq-ax_T1w.nii.gz .
+	cp ${bids_dir}/${participant}/anat/${participant}_acq-sag_T1w.nii.gz .
+	ants_combine_clinical_T1w.sh ${output_anat_dir} ${participant} ax sag
+fi
+
 
 # if needed, make the T1w isovolumetric:
 max_pixelwidth=`fslinfo ${participant}_T1w.nii.gz | grep pixdim[1-3] | awk '{ print $2 }' | sort -rn | head -1`
