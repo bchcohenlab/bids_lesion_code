@@ -1,5 +1,5 @@
 # This repository takes clinical T1 (T2, FLAIR) and DWI BIDS-formatted data and prepares it for lesion tracing.
-Typically, I would recommend cloning this into bids-dir/code
+Typically, I would recommend cloning this into `<bids-dir>/code`
 
 ## The main script is: `prep_for_ITKSNAP.sh`:
 
@@ -15,26 +15,35 @@ and generates/registers DWI, ADC, b0, and b1000 images to T1w space in:
 	  
 If this is not available, it will combine axial and coronal clinical scans into a 1mm iso T1:  
 	`<bids_dir>/<participant_id>/anat/<participant_id>_acq-ax_T1w.nii.gz`  
-	`<bids_dir>/<participant_id>/anat/<participant_id>_acq-sag_T1w.nii.gz`
+	`<bids_dir>/<participant_id>/anat/<participant_id>_acq-sag_T1w.nii.gz`  
 
 
 ### For the dwi input, it expects the following naming convention:  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_dwi.nii.gz`  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz` 
+	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz`  
 
-Optional (if not present, will assume last frame is b = 1000):  
+### Optional (if not present, will assume last frame is b = 1000):  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_dwi.bval`  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b0_dwi.nii.gz`  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz` 
+	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz`  
 
 
-## Traced lesions should be named with the following pattern:  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_space-T1w_desc-lesion_mask.nii.gz`
+## The files we want to use are:  
+	`<bids_dir>/derivatives/lesions/<participant_id>/dwi/<participant_id>_T1w.nii.gz`  
+	`<bids_dir>/derivatives/lesions/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz`  
+	`<bids_dir>/derivatives/lesions/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz`  
+  
+### If you want to look at the T2w/FLAIR images in the same frame of reference, they are here:  
+	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_T2w.nii.gz`  
+	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_FLAIR.nii.gz`  
 
+### And for now, name your lesion tracings with the following pattern:  
+	`<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-T1w_desc-lesion<your_initials>_mask.nii.gz`  
+  
 when we register these to MNI space, we will change the "space" descriptor:  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`
+	`<bids_dir>/<participant_id>/dwi/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`  
 
-Some of these scripts are from: https://neuroimaging-core-docs.readthedocs.io/, which is a GREAT collection of tutorials and examples.
-
+Some of these scripts are from: https://neuroimaging-core-docs.readthedocs.io/, which is a GREAT collection of tutorials and examples.  
+  
 Combining clinical T1w into iso T1w is done with: https://github.com/gift-surg/NiftyMIC  
 Registering T2, FLAIR, and DWI images to T1 is done with: https://github.com/ANTsX/ANTs `antsRegistrationSyNQuick.sh`
