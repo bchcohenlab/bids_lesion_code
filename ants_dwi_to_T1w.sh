@@ -35,12 +35,6 @@ antsRegistrationSyNQuick.sh \
 # remove non-BIDS suffix
 mv ${participant}_space-T1w_desc-b0_dwiWarped.nii.gz ${participant}_space-T1w_desc-b0_dwi.nii.gz
 
-# Clean up Inverse maps and save the Affine and Warpfield for later
-rm *Inverse*
-mkdir -p warps
-mv *mat warps
-mv *1Warp.nii.gz warps
-
 
 # Then we apply the transform to bring the adc into T1w space:
 antsApplyTransforms \
@@ -61,3 +55,7 @@ antsApplyTransforms \
 	-t warps/${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
 	-n BSpline \
 	-o ${participant}_space-T1w_desc-b1000_dwi.nii.gz
+
+# Clean up
+rm *mat
+rm *Warp.nii.gz

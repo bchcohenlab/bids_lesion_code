@@ -34,8 +34,6 @@ antsRegistrationSyNQuick.sh \
 # remove non-BIDS suffix
 mv ${participant}_space-T1w_${tag}Warped.nii.gz ${participant}_space-T1w_${tag}.nii.gz
 
-# Clean up Inverse maps and save the Affine and Warpfield for later
-rm *Inverse*
-mkdir -p warps
-mv *mat warps
-mv *1Warp.nii.gz warps
+# Clean up
+rm *mat
+rm *Warp.nii.gz

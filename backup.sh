@@ -1,8 +1,9 @@
 #!/bin/bash
- SRCDIR=$1
+ SRCDIR=`pwd`
  DESTDIR=$SRCDIR/backups
- FILENAME=ug-$(date +%-Y%-m%-d)-$(date +%-T).tgz
+ bids_name=${SRCDIR##*/}
+ FILENAME=${bids_name}_backup_$(date "+%Y-%m-%d")_$(date "+%H-%M-%S").tgz
  tar -cvpz \
- 	--exclude='backups/*'\
+ 	--exclude='backups/*' \
  	-f ${DESTDIR}/${FILENAME} \
- 	$SRCDIR
+ 	.
