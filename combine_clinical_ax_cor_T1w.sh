@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This code combines two T1w images that are at different resolutions (either with niftymic or fslmaths)
-# USAGE: ants_combine_clinical_T1w.sh /Users/alex/BWH_Social_Lesions/Dhand_bids/derivatives/lesions/temp sub-0194 ax sag
+# USAGE: combine_clinical_ax_cor_T1w.sh /Users/alex/BWH_Social_Lesions/Dhand_bids/derivatives/lesions/temp sub-0194 ax sag
 
 # export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=12  # controls multi-threading
 # export ANTSPATH=/Users/alex/repos/opt/bin/ # path to ANTs binaries
