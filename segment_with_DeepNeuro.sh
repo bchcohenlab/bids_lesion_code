@@ -11,15 +11,24 @@ b1000=${participant}_space-T1w_desc-b1000_dwi.nii.gz # This is the b1000 image
 output_dir=${working_dir}/DeepNeuro
 mkdir -p ${output_dir}
 
+cp ${working_dir}/${b0} ${output_dir}
+cp ${working_dir}/${b1000} ${output_dir}
+
 # Run the DeepNeuro docker (requires CUDA)
 docker run \
 	--gpus all \
 	--rm \
-	-v ${working_dir}:/INPUT_DATA \
+	-v ${output_dir}:/INPUT_DATA \
 	qtimlab/deepneuro_segment_ischemic_stroke \
 	segment_ischemic_stroke pipeline \
 	-B0 /INPUT_DATA/${b0} \
 	-DWI /INPUT_DATA/${b1000} \
-	-output_folder /INPUT_DATA/DeepNeuro \
+	-output_folder /INPUT_DATA \
 	-registered
 
+#pushd ${output_dir}
+#	for i in `find . -type f -name "*.gz"`; do 
+#		echo converting $i to float32
+#		fslmaths $i $i -odt float
+#	done
+#popd
