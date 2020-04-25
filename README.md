@@ -37,13 +37,21 @@ If this is not available, it will combine axial and coronal clinical scans into 
 	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_T2w.nii.gz`  
 	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_FLAIR.nii.gz`  
 
+
+### if you have both a B0 image and a B1000 image, you can try getting an automatic segmentation from DeepNeuro (requires a CUDA-capable card):
+	`<bids_dir>/code/segment_with_DeepNeuro.sh <bids_dir>/derivatives/lesions/<participant_id>/dwi <participant_id>`
+
 ### And for now, name your lesion tracings with the following pattern:  
 	`<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-T1w_desc-lesion<your_initials>_mask.nii.gz`  
   
 when we register these to MNI space, we will change the "space" descriptor:  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`  
-
-Some of these scripts are from: https://neuroimaging-core-docs.readthedocs.io/, which is a GREAT collection of tutorials and examples.  
   
-Combining clinical T1w into iso T1w is done with: https://github.com/gift-surg/NiftyMIC  
+  
+Several of these scripts are from: https://neuroimaging-core-docs.readthedocs.io/, which is a GREAT collection of tutorials and examples.  
+  
+Combining clinical T1w into a single HQ iso T1w is done with: https://github.com/gift-surg/NiftyMIC  
+
 Registering T2, FLAIR, and DWI images to T1 is done with: https://github.com/ANTsX/ANTs `antsRegistrationSyNQuick.sh`
+
+Initial segmentation of the DWI images is done with: https://github.com/QTIM-Lab/DeepNeuro/tree/master/deepneuro/pipelines/Ischemic_Stroke

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Must be run on a CUDA-capable server with nvidia-docker installed
+# USAGE: code/segment_with_DeepNeuro.sh /home_local/cohen/stroke_dwi_test/Dhand_bids/derivatives/lesions/sub-0197/dwi sub-0197
+# (use absolute paths)
+
 working_dir=$1
 participant=$2
 
