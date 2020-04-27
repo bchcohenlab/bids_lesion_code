@@ -41,7 +41,7 @@ bids_dir=$1
 participant=$2
 
 # Location of dataset code:
-BIDSPATH=${bids_dir}/code # path to ANTs binaries
+BIDSPATH=${bids_dir}/code # path to scripts
 export PATH="$PATH:${BIDSPATH}"
 
 # Expected input locations:

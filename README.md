@@ -9,20 +9,18 @@ It cleans up T1w files, and T2 and FLAIR files if present, and stores them in:
 and generates/registers DWI, ADC, b0, and b1000 images to T1w space in:  
 	`<bids_dir>/derivatives/lesions/<participant_id>/dwi`
 
-
-### For the T1w input, it expects the following naming convention:  
+For the T1w input, it expects the following naming convention:  
 	`<bids_dir>/<participant_id>/anat/<participant_id>_T1w.nii.gz`  
 	  
 If this is not available, it will combine axial and coronal clinical scans into a 1mm iso T1:  
 	`<bids_dir>/<participant_id>/anat/<participant_id>_acq-ax_T1w.nii.gz`  
 	`<bids_dir>/<participant_id>/anat/<participant_id>_acq-sag_T1w.nii.gz`  
 
-
-### For the dwi input, it expects the following naming convention:  
+For the dwi input, it expects the following naming convention:  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_dwi.nii.gz`  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz`  
 
-### Optional (if not present, will assume last frame is b = 1000):  
+Optional (if not present, will assume last frame is b = 1000):  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_dwi.bval`  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b0_dwi.nii.gz`  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz`  
@@ -33,18 +31,24 @@ If this is not available, it will combine axial and coronal clinical scans into 
 	`<bids_dir>/derivatives/lesions/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz`  
 	`<bids_dir>/derivatives/lesions/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz`  
   
-### If you want to look at the T2w/FLAIR images in the same frame of reference, they are here:  
+If you want to look at the T2w/FLAIR images in the same frame of reference, they are here:  
 	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_T2w.nii.gz`  
 	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_FLAIR.nii.gz`  
 
 
-### if you have both a B0 image and a B1000 image, you can try getting an automatic segmentation from DeepNeuro (requires a CUDA-capable card):
+If you have both a B0 image and a B1000 image, you can try getting an automatic segmentation from DeepNeuro (requires a CUDA-capable card):
 	`<bids_dir>/code/segment_with_DeepNeuro.sh <bids_dir>/derivatives/lesions/<participant_id>/dwi <participant_id>`
 
-### And for now, name your lesion tracings with the following pattern:  
+And for now, name your lesion tracings with the following pattern:  
 	`<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-T1w_desc-lesion<your_initials>_mask.nii.gz`  
   
-when we register these to MNI space, we will change the "space" descriptor:  
+To register individual-space T1ws and lesions to MNI space from BIDS-format, use:
+	`<bids_dir>/code/ants_Lesion_in_T1w_space_to_MNI_bids.sh` (NOT FINISHED YET)
+  
+To register a single individual-space T1w and lesion to MNI space from specific dir, use:	
+	`<bids_dir>/code/ants_Lesion_in_T1w_space_to_MNI_quick.sh`
+  
+	Either of these will change the "space" descriptor:  
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`  
   
   
