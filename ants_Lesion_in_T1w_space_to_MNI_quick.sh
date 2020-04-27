@@ -51,7 +51,8 @@ fi
 
 export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=12  # controls multi-threading
 echo This will use ${ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS} threads at a time
-export ANTSPATH=/Users/alex/repos/opt/bin
+
+# export ANTSPATH=/Users/alex/repos/opt/bin
 
 
 
