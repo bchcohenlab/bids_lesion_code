@@ -1,5 +1,6 @@
+[![DOI](https://zenodo.org/badge/257249924.svg)](https://zenodo.org/badge/latestdoi/257249924)
 # This repository takes clinical T1 (T2, FLAIR) and DWI BIDS-formatted data and prepares it for lesion tracing.
-Typically, I would recommend cloning this into `<bids-dir>/code`
+Typically, I would recommend cloning this into `<bids-dir>/code` (I will update this to be `<bids-dir>/code/bids_lesion_code` in the future to match YODA principles.
 
 ## The main script is: `prep_for_ITKSNAP.sh`:
 
