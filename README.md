@@ -49,7 +49,7 @@ To register individual-space T1ws and lesions to MNI space from BIDS-format, use
 	`<working_dir>/code/ants_Lesion_in_T1w_space_to_MNI_quick.sh`
   
 Either of these will change the "space" descriptor:  
-`<bids_dir>/<participant_id>/dwi/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`  
+`<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`  
   
   
 Several of these scripts are from: https://neuroimaging-core-docs.readthedocs.io/, which is a GREAT collection of tutorials and examples.  
