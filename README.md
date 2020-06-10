@@ -22,9 +22,9 @@ For the dwi input, it expects the following naming convention:
 	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz`  
 
 Optional (if not present, will assume last frame is b = 1000):  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_dwi.bval`  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b0_dwi.nii.gz`  
-	`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz`  
+`<bids_dir>/<participant_id>/dwi/<participant_id>_dwi.bval`  
+`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b0_dwi.nii.gz`  
+`<bids_dir>/<participant_id>/dwi/<participant_id>_desc-b1000_dwi.nii.gz`  
 
 
 ## The files we want to use are:  
@@ -33,20 +33,20 @@ Optional (if not present, will assume last frame is b = 1000):
 	`<bids_dir>/derivatives/lesions/<participant_id>/dwi/<participant_id>_desc-adc_dwi.nii.gz`  
   
 If you want to look at the T2w/FLAIR images in the same frame of reference, they are here:  
-	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_T2w.nii.gz`  
-	`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_FLAIR.nii.gz`  
+`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_T2w.nii.gz`  
+`<bids_dir>/derivatives/lesions/<participant_id>/anat/<participant_id>_space-T1w_FLAIR.nii.gz`  
 
 If you have both a B0 image and a B1000 image, you can try getting an automatic segmentation from DeepNeuro (requires a CUDA-capable card):
-	`<bids_dir>/code/segment_with_DeepNeuro.sh <bids_dir>/derivatives/lesions/<participant_id>/dwi <participant_id>`
+`<bids_dir>/code/segment_with_DeepNeuro.sh <bids_dir>/derivatives/lesions/<participant_id>/dwi <participant_id>`
 
 ## And for now, name your lesion tracings with the following pattern:  
-	`<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-T1w_desc-lesion<your_initials>_mask.nii.gz`  
+`<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-T1w_desc-lesion<your_initials>_mask.nii.gz`  
   
 To register individual-space T1ws and lesions to MNI space from BIDS-format, use:
-	`<bids_dir>/code/ants_Lesion_in_T1w_space_to_MNI_bids.sh` (NOT FINISHED YET)
+`<bids_dir>/code/ants_Lesion_in_T1w_space_to_MNI_bids.sh` (NOT FINISHED YET)
   
 ## (NON-BIDS QUICK SCRIPT): To register a single individual-space T1w and lesion to MNI space from specific dir, use:	
-	`<working_dir>/code/ants_Lesion_in_T1w_space_to_MNI_quick.sh`
+`<working_dir>/code/ants_Lesion_in_T1w_space_to_MNI_quick.sh`
   
 Either of these will change the "space" descriptor:  
 `<bids_dir>/derivatives/lesions/<participant_id>/<participant_id>_space-MNI152NLin2009cAsym_desc-lesion_mask.nii.gz`  
