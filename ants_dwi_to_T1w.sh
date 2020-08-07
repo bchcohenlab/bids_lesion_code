@@ -4,10 +4,10 @@
 # USAGE: ../../code/ants_dwi_to_T1w.sh ../anat/sub-0195_T1w.nii.gz sub-0195_desc-b0_dwi.nii.gz
 
 export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=12  # controls multi-threading
-export ANTSPATH=/programs/x86_64-linux/ants/2.3.1/bin/ # path to ANTs binaries
+# export ANTSPATH=/programs/x86_64-linux/ants/2.3.1/bin/ # path to ANTs binaries
 
 echo This will use ${ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS} threads at a time
-echo Using the ANTs version installed at ${ANTSPATH}
+# echo Using the ANTs version installed at ${ANTSPATH}
 
 # temp_dir=./ants_Temp
 # mkdir -p $temp_dir
@@ -41,8 +41,8 @@ antsApplyTransforms \
 	-d 3 \
 	-i ${adc} \
 	-r ${T1w} \
-	-t warps/${participant}_space-T1w_desc-b0_dwi1Warp.nii.gz \
-	-t warps/${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
+	-t ${participant}_space-T1w_desc-b0_dwi1Warp.nii.gz \
+	-t ${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
 	-n BSpline \
 	-o ${participant}_space-T1w_desc-adc_dwi.nii.gz
 
@@ -51,8 +51,8 @@ antsApplyTransforms \
 	-d 3 \
 	-i ${b1000} \
 	-r ${T1w} \
-	-t warps/${participant}_space-T1w_desc-b0_dwi1Warp.nii.gz \
-	-t warps/${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
+	-t ${participant}_space-T1w_desc-b0_dwi1Warp.nii.gz \
+	-t ${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
 	-n BSpline \
 	-o ${participant}_space-T1w_desc-b1000_dwi.nii.gz
 
