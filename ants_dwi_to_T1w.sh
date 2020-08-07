@@ -59,3 +59,4 @@ antsApplyTransforms \
 # Clean up
 rm *mat
 rm *Warp.nii.gz
+rm *InverseWarped.nii.gz
