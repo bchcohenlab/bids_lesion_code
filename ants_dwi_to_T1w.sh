@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This code generates the mapping from the B0 image to the T1W, and applies this mapping to the ADC map as well
-# USAGE: ../../code/ants_dwi_to_T1w.sh ../anat/sub-0195_T1w.nii.gz sub-0195_desc-b0_dwi.nii.gz
+# USAGE: ../../code/ants_dwi_to_T1w.sh . sub-0195
 
 export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=12  # controls multi-threading
 export ANTSPATH=/programs/x86_64-linux/ants/2.3.1/bin/ # path to ANTs binaries
