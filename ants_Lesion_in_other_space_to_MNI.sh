@@ -2,7 +2,7 @@
 
 
 export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=12  # controls multi-threading
-export ANTSPATH=/Users/alex/repos/opt/bin/ # path to ANTs binaries
+export ANTSPATH=/programs/x86_64-linux/ants/2.3.1/bin/ # path to ANTs binaries
 
 echo This will use ${ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS} threads at a time
 echo Using the ANTs version installed at ${ANTSPATH}
