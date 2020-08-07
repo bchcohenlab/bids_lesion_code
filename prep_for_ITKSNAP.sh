@@ -17,7 +17,7 @@ if [ $# -lt 1 ] ; then
 	echo "Then, it creates b0, b1000, and adc maps from a dwi file and registers"
 	echo "these to the cleaned T1w image."
 	echo "output:"
-	echo "An anat dir in <bids_dir>/derivatives/lesions/,participant_id> containing:"
+	echo "An anat dir in <bids_dir>/derivatives/lesions/<participant_id> containing:"
 	echo "1) A cropped, reoriented, (resampled), and bias corrected head, e.g., sub-001_T1w.nii.gz,"
 	echo "2) A brain mask, e.g., sub-001_space-T1w_desc-brain_mask.nii.gz, and"
 	echo "3) A copy of the anisovol T1w (if converted), and an non-bias corrected version as well."
