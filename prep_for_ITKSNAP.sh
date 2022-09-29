@@ -9,7 +9,7 @@ COMMENTBLOCK
 # If there are no arguments:
 if [ $# -lt 1 ] ; then
 	echo "Usage: $0 <bids_dir> <participant_id>"
-	echo "e.g. prep_for_ITSKNAP.sh /Users/alex/data/lesions/WKTang_bids sub-001"
+	echo "e.g. prep_for_ITKSNAP.sh /Users/alex/data/lesions/WKTang_bids sub-001"
 	echo "This script prepares a T1w image and DWI for lesion mapping."
 	echo "It resamples the T1w to isovolumetric if needed, then "
 	echo "reorients, bias corrects, and crops the T1w and also produces a "
