@@ -50,26 +50,24 @@ input_anat=${bids_dir}/${participant}/anat
 if [ -d "$input_anat" ]; then
 	echo "one session data"
 	input_T1w=${input_anat}/${participant}_T1w.nii.gz
-	input_T2w=${bids_dir}/${participant}/anat/${participant}_T2w.nii.gz
-	input_FLAIR=${bids_dir}/${participant}/anat/${participant}_FLAIR.nii.gz
+	input_T2w=${input_anat}/${participant}_T2w.nii.gz
+	input_FLAIR=${input_anat}/${participant}_FLAIR.nii.gz
 	input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
 	input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
 	input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
 
 else
-	
+	echo "more than one session" 
 	input_anat=${bids_dir}/${participant}/${session}/anat
 	input_T1w=${input_anat}/${participant}_${session}_T1w.nii.gz
-	input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
-	input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
-	input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
+	input_T2w=${input_anat}/${participant}_${session}_T2w.nii.gz
+	input_FLAIR=${input_anat}/${participant}_${session}_FLAIR.nii.gz
+	input_dwi=${bids_dir}/${participant}/${session}/dwi/${participant}_${session}_dwi.nii.gz
+	input_b0=${bids_dir}/${participant}/${session}/dwi/${participant}_${session}_desc-b0_dwi.nii.gz
+	input_adc=${bids_dir}/${participant}/${session}/dwi/${participant}_${session}_desc-adc_dwi.nii.gz
 
 fi
 
-input_T1w=${input_anat}/${participant}_T1w.nii.gz
-input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
-input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
-input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
 
 # Output locations:
 output_anat_dir=${bids_dir}/derivatives/lesions/${participant}/anat
