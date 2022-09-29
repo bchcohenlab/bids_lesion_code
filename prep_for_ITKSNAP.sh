@@ -39,13 +39,34 @@ fi
 
 bids_dir=$1
 participant=$2
+session=`ls -1 ${bids_dir}/${participant}`
 
 # Location of dataset code:
 BIDSPATH=${bids_dir}/code # path to scripts
 export PATH="$PATH:${BIDSPATH}"
 
 # Expected input locations:
-input_T1w=${bids_dir}/${participant}/anat/${participant}_T1w.nii.gz
+input_anat=${bids_dir}/${participant}/anat
+if [ -d "$input_anat" ]; then
+	echo "one session data"
+	input_T1w=${input_anat}/${participant}_T1w.nii.gz
+	input_T2w=${bids_dir}/${participant}/anat/${participant}_T2w.nii.gz
+	input_FLAIR=${bids_dir}/${participant}/anat/${participant}_FLAIR.nii.gz
+	input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
+	input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
+	input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
+
+else
+	
+	input_anat=${bids_dir}/${participant}/${session}/anat
+	input_T1w=${input_anat}/${participant}_${session}_T1w.nii.gz
+	input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
+	input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
+	input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
+
+fi
+
+input_T1w=${input_anat}/${participant}_T1w.nii.gz
 input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
 input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
 input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
@@ -97,7 +118,6 @@ mv ${participant}_T1w_orig.nii.gz ${participant}_desc-uncorrected_T1w.nii.gz
 
 
 #If present, go ahead and warp the T2w and FLAIR to T1w space as well (these are usually low-res aniso):
-input_T2w=${bids_dir}/${participant}/anat/${participant}_T2w.nii.gz
 if [ -f "$input_T2w" ]; then
  	cp $input_T2w .
  	tag=T2w
@@ -106,7 +126,6 @@ else
 	echo "*** FYI: No T2w found ***"
 fi
 
-input_FLAIR=${bids_dir}/${participant}/anat/${participant}_FLAIR.nii.gz
 if [ -f "$input_FLAIR" ]; then
  	cp $input_FLAIR .
  	tag=FLAIR
