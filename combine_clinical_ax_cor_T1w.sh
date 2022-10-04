@@ -17,8 +17,8 @@ participant=$2
 target_T1w_acq=$3
 other_T1w_acq=$4
 
-template=${working_dir}/${participant}_acq-${target_T1w_acq}_T1w.nii.gz # This is the target T1w
-orig=${working_dir}/${participant}_acq-${other_T1w_acq}_T1w.nii.gz # This is another T1w
+template=${working_dir}/${participant}${session_filename}_acq-${target_T1w_acq}_T1w.nii.gz # This is the target T1w
+orig=${working_dir}/${participant}${session_filename}_acq-${other_T1w_acq}_T1w.nii.gz # This is another T1w
 
 #### High quality fusion using niftymic:
 
@@ -42,8 +42,8 @@ docker run \
 	renbem/niftymic \
 	niftymic_reconstruct_volume \
 		--filenames \
-			data/${participant}_acq-${target_T1w_acq}_T1w.nii.gz \
-			data/${participant}_acq-${other_T1w_acq}_T1w.nii.gz \
+			data/${participant}${session_filename}_acq-${target_T1w_acq}_T1w.nii.gz \
+			data/${participant}${session_filename}_acq-${other_T1w_acq}_T1w.nii.gz \
 		--filenames-masks \
 			data/temp_${target_T1w_acq}_mask.nii.gz \
 			data/temp_${other_T1w_acq}_mask.nii.gz \
