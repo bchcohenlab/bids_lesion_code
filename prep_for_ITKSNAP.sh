@@ -40,15 +40,24 @@ fi
 bids_dir=$1
 participant=$2
 
+session=`ls ${bids_dir}/${participant}`
+if echo $session | grep ses ; then 
+    session_path=/${session}
+    session_filename=_${session}
+else
+    session_path=
+    session_filename=
+fi
+
 # Location of dataset code:
 BIDSPATH=${bids_dir}/code # path to scripts
 export PATH="$PATH:${BIDSPATH}"
 
 # Expected input locations:
-input_T1w=${bids_dir}/${participant}/anat/${participant}_T1w.nii.gz
-input_dwi=${bids_dir}/${participant}/dwi/${participant}_dwi.nii.gz
-input_b0=${bids_dir}/${participant}/dwi/${participant}_desc-b0_dwi.nii.gz
-input_adc=${bids_dir}/${participant}/dwi/${participant}_desc-adc_dwi.nii.gz
+input_T1w=${bids_dir}/${participant}${session_path}/anat/${participant}${session_filename}_T1w.nii.gz
+input_dwi=${bids_dir}/${participant}${session_path}/dwi/${participant}${session_filename}_dwi.nii.gz
+input_b0=${bids_dir}/${participant}${session_path}/dwi/${participant}${session_filename}_desc-b0_dwi.nii.gz
+input_adc=${bids_dir}/${participant}${session_path}/dwi/${participant}${session_filename}_desc-adc_dwi.nii.gz
 
 # Output locations:
 output_anat_dir=${bids_dir}/derivatives/lesions/${participant}/anat
@@ -67,26 +76,26 @@ if [ -f "$input_T1w" ]; then
  	cp $input_T1w .
 else
 	echo "*** No single T1w found, making a consolidated one from ax and sag T1w ***"
-	cp ${bids_dir}/${participant}/anat/${participant}_acq-ax_T1w.nii.gz .
-	cp ${bids_dir}/${participant}/anat/${participant}_acq-sag_T1w.nii.gz .
+	cp ${bids_dir}/${participant}${session_path}/anat/${participant}${session_filename}_acq-ax_T1w.nii.gz .
+	cp ${bids_dir}/${participant}${session_path}/anat/${participant}${session_filename}_acq-sag_T1w.nii.gz .
 	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} ax sag
 fi
 
 
 # if needed, make the T1w isovolumetric:
-max_pixelwidth=`fslinfo ${participant}_T1w.nii.gz | grep pixdim[1-3] | awk '{ print $2 }' | sort -rn | head -1`
+max_pixelwidth=`fslinfo ${participant}${session_filename}_T1w.nii.gz | grep pixdim[1-3] | awk '{ print $2 }' | sort -rn | head -1`
 if [ $max_pixelwidth \> 1.5 ];
 then 
 	echo "largest pixel dimension is ${max_pixelwidth} > 1.5mm, reslicing to 1mm isovolumetric";
 	iso.sh ${participant}_T1w.nii.gz 1
-	mv ${participant}_T1w.nii.gz ${participant}_T1w_aniso.nii.gz
-	mv ${participant}_T1w_1mm.nii.gz ${participant}_T1w.nii.gz
+	mv ${participant}${session_filename}_T1w.nii.gz ${participant}_T1w_aniso.nii.gz
+	mv ${participant}_T1w_1mm.nii.gz ${participant}${session_filename}_T1w.nii.gz
 else
  	echo "largest pixel dimension is ${max_pixelwidth}, leaving image alone";
 fi
 
 # reorient, bias correct, and crop T1w and make a brain mask:
-prep_T1w.sh ${participant}_T1w.nii.gz
+prep_T1w.sh ${participant}${session_filename}_T1w.nii.gz
 
 # Change brain mask to BIDS compliant name
 mv ${participant}_T1w_brain_mask.nii.gz ${participant}_space-T1w_desc-brain_mask.nii.gz
@@ -97,7 +106,7 @@ mv ${participant}_T1w_orig.nii.gz ${participant}_desc-uncorrected_T1w.nii.gz
 
 
 #If present, go ahead and warp the T2w and FLAIR to T1w space as well (these are usually low-res aniso):
-input_T2w=${bids_dir}/${participant}/anat/${participant}_T2w.nii.gz
+input_T2w=${bids_dir}/${participant}${session_path}/anat/${participant}${session_filename}_T2w.nii.gz
 if [ -f "$input_T2w" ]; then
  	cp $input_T2w .
  	tag=T2w
@@ -106,7 +115,7 @@ else
 	echo "*** FYI: No T2w found ***"
 fi
 
-input_FLAIR=${bids_dir}/${participant}/anat/${participant}_FLAIR.nii.gz
+input_FLAIR=${bids_dir}/${participant}${session_path}/anat/${participant}${session_filename}_FLAIR.nii.gz
 if [ -f "$input_FLAIR" ]; then
  	cp $input_FLAIR .
  	tag=FLAIR
