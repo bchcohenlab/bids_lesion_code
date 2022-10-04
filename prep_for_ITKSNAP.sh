@@ -87,7 +87,7 @@ max_pixelwidth=`fslinfo ${participant}${session_filename}_T1w.nii.gz | grep pixd
 if [ $max_pixelwidth \> 1.5 ];
 then 
 	echo "largest pixel dimension is ${max_pixelwidth} > 1.5mm, reslicing to 1mm isovolumetric";
-	iso.sh ${participant}_T1w.nii.gz 1
+	iso.sh ${participant}${session_filename}_T1w.nii.gz 1
 	mv ${participant}${session_filename}_T1w.nii.gz ${participant}_T1w_aniso.nii.gz
 	mv ${participant}_T1w_1mm.nii.gz ${participant}${session_filename}_T1w.nii.gz
 else
