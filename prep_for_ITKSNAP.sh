@@ -68,7 +68,13 @@ if [ -f "$input_T1w" ]; then
 else
 	echo "*** No single T1w found, making a consolidated one ***"
 	cp ${bids_dir}/${participant}/anat/${participant}_acq-*_T1w.nii.gz .
-	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} ax sag
+	count=1
+	for i in `find . -name *acq*T1*nii.gz`; do 
+		acq${count}=`echo $i | rev | cut -d '_' -f2 | rev`
+		$((count++))
+	done
+	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3
+	acq1= ; acq2= ; acq3=
 fi
 
 
