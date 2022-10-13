@@ -14,26 +14,30 @@
 
 working_dir=$1
 participant=$2
-target_T1w_acq=$3
-other_T1w_acq=$4
+A_T1w_acq=$3
+B_T1w_acq=$4
+C_T1w_acq=$5
 
-template=${working_dir}/${participant}_acq-${target_T1w_acq}_T1w.nii.gz # This is the target T1w
-orig=${working_dir}/${participant}_acq-${other_T1w_acq}_T1w.nii.gz # This is another T1w
+first=${working_dir}/${participant}_${A_T1w_acq}_T1w.nii.gz # This is the target T1w
+second=${working_dir}/${participant}_${B_T1w_acq}_T1w.nii.gz # This is another T1w
+third=${working_dir}/${participant}_${C_T1w_acq}_T1w.nii.gz
+
 
 #### High quality fusion using niftymic:
 
+if [ -z "$5" ]; then 
 # First, Make binary masks of where the two images have values:
 fslmaths \
-	${template} \
+	${first} \
 	-abs \
 	-bin \
-	temp_${target_T1w_acq}_mask
+	temp_${A_T1w_acq}_mask
 
 fslmaths \
-	${orig} \
+	${second} \
 	-abs \
 	-bin \
-	temp_${other_T1w_acq}_mask
+	temp_${B_T1w_acq}_mask
 
 
 docker run \
@@ -42,13 +46,49 @@ docker run \
 	renbem/niftymic \
 	niftymic_reconstruct_volume \
 		--filenames \
-			data/${participant}_acq-${target_T1w_acq}_T1w.nii.gz \
-			data/${participant}_acq-${other_T1w_acq}_T1w.nii.gz \
+			data/${participant}_acq-${A_T1w_acq}_T1w.nii.gz \
+			data/${participant}_acq-${B_T1w_acq}_T1w.nii.gz \
 		--filenames-masks \
-			data/temp_${target_T1w_acq}_mask.nii.gz \
-			data/temp_${other_T1w_acq}_mask.nii.gz \
+			data/temp_${A_T1w_acq}_mask.nii.gz \
+			data/temp_${B_T1w_acq}_mask.nii.gz \
 		--output \
 			data/${participant}_T1w.nii.gz
+elif [ "$5" ]; then
+fslmaths \
+	${first} \
+	-abs \
+	-bin \
+	temp_${A_T1w_acq}_mask
+
+fslmaths \
+	${second} \
+	-abs \
+	-bin \
+	temp_${B_T1w_acq}_mask
+	
+fslmaths \
+	${third} \
+	-abs \
+	-bin \
+	temp_${C_T1w_acq}_mask
+
+
+docker run \
+	-v ${working_dir}:/app/data \
+	-it \
+	renbem/niftymic \
+	niftymic_reconstruct_volume \
+		--filenames \
+			data/${participant}_acq-${A_T1w_acq}_T1w.nii.gz \
+			data/${participant}_acq-${B_T1w_acq}_T1w.nii.gz \
+			data/${participant}_acq-${C_T1w_acq}_T1w.nii.gz \
+		--filenames-masks \
+			data/temp_${A_T1w_acq}_mask.nii.gz \
+			data/temp_${B_T1w_acq}_mask.nii.gz \
+			data/temp_${C_T1w_acq}_mask.nii.gz \
+		--output \
+			data/${participant}_T1w.nii.gz
+fi
 
 # Clean up:
 rm -rf \
@@ -59,6 +99,14 @@ rm -rf \
 
 
 #### Manual process if you don't want to use niftymic:
+working_dir=$1
+participant=$2
+target_T1w_acq=$3
+other_T1w_acq=$4
+
+
+template=${working_dir}/${participant}_${target_T1w_acq}_T1w.nii.gz # This is the target T1w
+orig=${working_dir}/${participant}_${other_T1w_acq}_T1w.nii.gz # This is another T1w
 
 	# transform_type=a # typically r=rigid or a=rigid+affine work fine since it is the same subject/same modality
 
