@@ -46,8 +46,8 @@ singularity exec \
 	${BIDSPATH}/niftymic.sif \
 	niftymic_reconstruct_volume \
 		--filenames \
-			data/${participant}_acq-${A_T1w_acq}_T1w.nii.gz \
-			data/${participant}_acq-${B_T1w_acq}_T1w.nii.gz \
+			data/${participant}_${A_T1w_acq}_T1w.nii.gz \
+			data/${participant}_${B_T1w_acq}_T1w.nii.gz \
 		--filenames-masks \
 			data/temp_${A_T1w_acq}_mask.nii.gz \
 			data/temp_${B_T1w_acq}_mask.nii.gz \
@@ -80,9 +80,9 @@ singularity exec \
 	${BIDSPATH}/niftymic.sif \
 	niftymic_reconstruct_volume \
 		--filenames \
-			data/${participant}_acq-${A_T1w_acq}_T1w.nii.gz \
-			data/${participant}_acq-${B_T1w_acq}_T1w.nii.gz \
-			data/${participant}_acq-${C_T1w_acq}_T1w.nii.gz \
+			data/${participant}_${A_T1w_acq}_T1w.nii.gz \
+			data/${participant}_${B_T1w_acq}_T1w.nii.gz \
+			data/${participant}_${C_T1w_acq}_T1w.nii.gz \
 		--filenames-masks \
 			data/temp_${A_T1w_acq}_mask.nii.gz \
 			data/temp_${B_T1w_acq}_mask.nii.gz \
