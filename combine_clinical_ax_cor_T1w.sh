@@ -40,10 +40,10 @@ fslmaths \
 	temp_${B_T1w_acq}_mask
 
 
-docker run \
-	-v ${working_dir}:/app/data \
-	-it \
-	renbem/niftymic \
+singularity exec \
+	-B ${working_dir}:/app/data \
+        -B ${BIDSPATH}:${BIDSPATH} \
+	${BIDSPATH}/niftymic.sif \
 	niftymic_reconstruct_volume \
 		--filenames \
 			data/${participant}_acq-${A_T1w_acq}_T1w.nii.gz \
@@ -53,6 +53,7 @@ docker run \
 			data/temp_${B_T1w_acq}_mask.nii.gz \
 		--output \
 			data/${participant}_T1w.nii.gz
+			
 elif [ "$5" ]; then
 fslmaths \
 	${first} \
@@ -73,10 +74,10 @@ fslmaths \
 	temp_${C_T1w_acq}_mask
 
 
-docker run \
-	-v ${working_dir}:/app/data \
-	-it \
-	renbem/niftymic \
+singularity exec \
+	-B ${working_dir}:/app/data \
+        -B ${BIDSPATH}:${BIDSPATH} \
+	${BIDSPATH}/niftymic.sif \
 	niftymic_reconstruct_volume \
 		--filenames \
 			data/${participant}_acq-${A_T1w_acq}_T1w.nii.gz \
