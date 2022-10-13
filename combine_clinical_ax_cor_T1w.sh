@@ -46,13 +46,13 @@ singularity exec \
 	${BIDSPATH}/niftymic.sif \
 	niftymic_reconstruct_volume \
 		--filenames \
-			data/${participant}_${A_T1w_acq}_T1w.nii.gz \
-			data/${participant}_${B_T1w_acq}_T1w.nii.gz \
+			/app/data/${participant}_${A_T1w_acq}_T1w.nii.gz \
+			/app/data/${participant}_${B_T1w_acq}_T1w.nii.gz \
 		--filenames-masks \
-			data/temp_${A_T1w_acq}_mask.nii.gz \
-			data/temp_${B_T1w_acq}_mask.nii.gz \
+			/app/data/temp_${A_T1w_acq}_mask.nii.gz \
+			/app/data/temp_${B_T1w_acq}_mask.nii.gz \
 		--output \
-			data/${participant}_T1w.nii.gz
+			/app/data/${participant}_T1w.nii.gz
 			
 elif [ "$5" ]; then
 fslmaths \
@@ -80,15 +80,15 @@ singularity exec \
 	${BIDSPATH}/niftymic.sif \
 	niftymic_reconstruct_volume \
 		--filenames \
-			data/${participant}_${A_T1w_acq}_T1w.nii.gz \
-			data/${participant}_${B_T1w_acq}_T1w.nii.gz \
-			data/${participant}_${C_T1w_acq}_T1w.nii.gz \
+			/app/data/${participant}_${A_T1w_acq}_T1w.nii.gz \
+			/app/data/${participant}_${B_T1w_acq}_T1w.nii.gz \
+			/app/data/${participant}_${C_T1w_acq}_T1w.nii.gz \
 		--filenames-masks \
-			data/temp_${A_T1w_acq}_mask.nii.gz \
-			data/temp_${B_T1w_acq}_mask.nii.gz \
-			data/temp_${C_T1w_acq}_mask.nii.gz \
+			/app/data/temp_${A_T1w_acq}_mask.nii.gz \
+			/app/data/temp_${B_T1w_acq}_mask.nii.gz \
+			/app/data/temp_${C_T1w_acq}_mask.nii.gz \
 		--output \
-			data/${participant}_T1w.nii.gz
+			/app/data/${participant}_T1w.nii.gz
 fi
 
 # Clean up:
