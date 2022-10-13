@@ -66,9 +66,8 @@ pushd ${output_anat_dir}
 if [ -f "$input_T1w" ]; then
  	cp $input_T1w .
 else
-	echo "*** No single T1w found, making a consolidated one from ax and sag T1w ***"
-	cp ${bids_dir}/${participant}/anat/${participant}_acq-ax_T1w.nii.gz .
-	cp ${bids_dir}/${participant}/anat/${participant}_acq-sag_T1w.nii.gz .
+	echo "*** No single T1w found, making a consolidated one ***"
+	cp ${bids_dir}/${participant}/anat/${participant}_acq-*_T1w.nii.gz .
 	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} ax sag
 fi
 
