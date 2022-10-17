@@ -70,7 +70,7 @@ else
 	cp ${bids_dir}/${participant}/anat/${participant}_acq-*_T1w.nii.gz .
 	count=1
 	for i in `find . -name "*acq*T1*nii.gz"`; do 
-		acq_${count}=`echo $i | rev | cut -d '_' -f2 | rev`
+		eval acq${count}=`echo $i | rev | cut -d '_' -f2 | rev`
 		count=$((count+1))
 	done
 	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3
