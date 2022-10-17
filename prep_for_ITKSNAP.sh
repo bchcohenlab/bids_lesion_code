@@ -73,6 +73,7 @@ else
 		eval acq${count}=`echo $i | rev | cut -d '_' -f2 | rev`
 		count=$((count+1))
 	done
+	echo "*** Consolidating $acq1 $acq2 $acq3 ***"
 	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3
 	acq1= ; acq2= ; acq3=
 fi
