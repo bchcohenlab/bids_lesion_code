@@ -7,6 +7,8 @@
 working_dir=$1
 participant=$2
 
+BIDSPATH=/lab-share/Neuro-Cohen-e2/Public/lesions/MGH_Perinatal_Stroke_BIDS/code/bids_lesion_code
+
 # Expected input locations:
 b0=${participant}_space-T1w_desc-b0_dwi.nii.gz # This is the b0 image
 b1000=${participant}_space-T1w_desc-b1000_dwi.nii.gz # This is the b1000 image
@@ -19,11 +21,10 @@ cp ${working_dir}/${b0} ${output_dir}
 cp ${working_dir}/${b1000} ${output_dir}
 
 # Run the DeepNeuro docker (requires CUDA)
-docker run \
-	--gpus all \
-	--rm \
-	-v ${output_dir}:/INPUT_DATA \
-	qtimlab/deepneuro_segment_ischemic_stroke \
+singularity exec \
+	-B ${output_dir}:/INPUT_DATA \
+	--nv
+	${BIDSPATH}/deepneuro.sif \
 	segment_ischemic_stroke pipeline \
 	-B0 /INPUT_DATA/${b0} \
 	-DWI /INPUT_DATA/${b1000} \
