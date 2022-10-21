@@ -4,17 +4,17 @@
 # USAGE: code/segment_with_DeepNeuro.sh /home_local/cohen/stroke_dwi_test/Dhand_bids/derivatives/lesions/sub-0197/dwi sub-0197
 # (use absolute paths)
 
-working_dir=$1
+bids_dir=$1
 participant=$2
 
-BIDSPATH=/lab-share/Neuro-Cohen-e2/Public/lesions/MGH_Perinatal_Stroke_BIDS/code/bids_lesion_code
+BIDSPATH=${bids_dir}/code/bids_lesion_code
 
 # Expected input locations:
 b0=${participant}_space-T1w_desc-b0_dwi.nii.gz # This is the b0 image
 b1000=${participant}_space-T1w_desc-b1000_dwi.nii.gz # This is the b1000 image
 
 # Output location:
-output_dir=${working_dir}/DeepNeuro
+output_dir=${bids_dir}/derivatives/lesions/${participant}/DeepNeuro
 mkdir -p ${output_dir}
 
 cp ${working_dir}/${b0} ${output_dir}
