@@ -34,6 +34,9 @@ singularity exec --nv \
 	-DWI /INPUT_DATA/${b1000} \
 	-output_folder /INPUT_DATA \
 	-registered
+
+#Rename DeepNeuro Segmentation Label
+mv ${output_dir}/segmentation_label.nii.gz ${output_dir}/${participant}_DeepNeuro_segmentation_label.nii.gz
 	
 #pushd ${output_dir}
 #	for i in `find . -type f -name "*.gz"`; do 
