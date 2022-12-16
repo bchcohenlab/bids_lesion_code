@@ -6,6 +6,7 @@
 
 bids_dir=$1
 participant=$2
+reg_target=$3
 
 module load cuda
 #module load singularity
@@ -14,8 +15,8 @@ source /programs/biogrids.shrc
 BIDSPATH=${bids_dir}/code/bids_lesion_code
 
 # Expected input locations:
-b0=${participant}_space-T1w_desc-b0_dwi.nii.gz # This is the b0 image
-b1000=${participant}_space-T1w_desc-b1000_dwi.nii.gz # This is the b1000 image
+b0=${participant}_space-${reg_target}_desc-b0_dwi.nii.gz # This is the b0 image
+b1000=${participant}_space-${reg_target}_desc-b1000_dwi.nii.gz # This is the b1000 image
 input_dir=${bids_dir}/derivatives/lesions/${participant}/dwi 
 
 # Output location:
