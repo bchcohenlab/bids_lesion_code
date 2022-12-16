@@ -8,7 +8,7 @@ bids_dir=$1
 participant=$2
 
 module load cuda
-module load singularity
+#module load singularity
 source /programs/biogrids.shrc
 
 BIDSPATH=${bids_dir}/code/bids_lesion_code
