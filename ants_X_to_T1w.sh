@@ -15,24 +15,25 @@ echo This will use ${ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS} threads at a time
 working_dir=$1
 participant=$2
 tag=$3
+reg_target=$4 
 
-template=${working_dir}/${participant}_T1w.nii.gz # This is the T1w
-mask=${working_dir}/${participant}_space-T1w_desc-brain_mask.nii.gz # This is the mask made from the T1w in prior steps
+template=${working_dir}/${participant}_${reg_target}.nii.gz # This is the T1w
+mask=${working_dir}/${participant}_space-${reg_target}_desc-brain_mask.nii.gz # This is the mask made from the T1w in prior steps
 orig=${working_dir}/${participant}_${tag}.nii.gz # This is the input image
 
-T1w=`basename ${template}`
+Target=`basename ${template}`
 
 # Generate linear and warp from input space to T1 target
 # -x $mask \
 antsRegistrationSyNQuick.sh \
 	-d 3 \
 	-m $orig \
-	-f $T1w \
+	-f $Target \
 	-t br \
-	-o ${participant}_space-T1w_${tag}
+	-o ${participant}_space-${reg_target}_${tag}
 
 # remove non-BIDS suffix
-mv ${participant}_space-T1w_${tag}Warped.nii.gz ${participant}_space-T1w_${tag}.nii.gz
+mv ${participant}_space-${reg_target}_${tag}Warped.nii.gz ${participant}_space-${reg_target}_${tag}.nii.gz
 
 # Clean up
 rm *mat
