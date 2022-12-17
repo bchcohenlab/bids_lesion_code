@@ -87,6 +87,7 @@ singularity exec \
 			/app/data/temp_${C_T1w_acq}_mask.nii.gz \
 		--output \
 			/app/data/${participant}_T1w.nii.gz
+fi
 
 # Clean up:
 rm -rf \
