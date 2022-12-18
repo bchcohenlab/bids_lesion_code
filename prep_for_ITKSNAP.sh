@@ -57,7 +57,7 @@ input_aniso_T1w=${bids_dir}/${participant}/anat/${participant}_acq-*_T1w.nii.gz 
 output_anat_dir=${bids_dir}/derivatives/lesions/${participant}/anat
 output_dwi_dir=${bids_dir}/derivatives/lesions/${participant}/dwi
 mkdir -p ${output_anat_dir}
-mkdir -p ${output_dwi_dir}
+mkdir -p ${output_dwi_dir} #GM - Move down so only do for acute scans
 
 
 
@@ -77,13 +77,13 @@ elif
 		count=$((count+1))
 	done
 	echo "*** Consolidating $acq1 $acq2 $acq3 ***"
-	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3
+	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3 #GM - make loop in this script better (ex in ants_dwi_to_t1w.sh?)
 	acq1= ; acq2= ; acq3=
 else
 	echo "*** No T1w found ***"
 fi
 
-#If present, copy over the T12w and FLAIR, or make one if only clinical scans
+#If present, copy over the T2w and FLAIR, or make one if only clinical scans
 if [ -f "$input_T2w" ]; then
  	cp $input_T2w .
 else
@@ -98,7 +98,7 @@ else
 	#GM - combining happens here
 fi
 
-#Set registration target to T1w or to T2w if no T1w 
+#Set registration target to T1w or to T2w if no T1w #GM - make loop better
 if ls | grep -q 'T1w'; then 
 	reg_target=T1w
 elif ls | grep -q 'T2w'; then
@@ -130,7 +130,7 @@ mv ${participant}_${reg_target}_orig.nii.gz ${participant}_desc-uncorrected_${re
 
 
 #register scans to registration target - GM format loop more like original script 
-if [ $reg_target = "T1w" ]; then 
+if [ $reg_target = "T1w" ]; then # GM - loop not right, skips FLAIR as is 
 	if ls | grep -q 'T2w'; then
 		tag=T2w
  		ants_X_to_T1w.sh $output_anat_dir $participant $tag $reg_target
@@ -146,14 +146,36 @@ elif [ $reg_target = "T2w" ]; then
 	fi
 fi
 
+#new loop
+
+if [ -f "$input_T2w" ] && [ ${reg_target} = "T1w"] ; then
+ 	cp $input_T2w .
+ 	tag=T2w
+ 	ants_X_to_T1w.sh $output_anat_dir $participant $tag T1w
+else
+	echo "*** FYI: No T2w found ***"
+fi
+
+if [ -f "$input_FLAIR" ]; then
+ 	cp $input_FLAIR .
+ 	tag=FLAIR
+ 	ants_X_to_T1w.sh $output_anat_dir $participant $tag $reg_target
+else
+	echo "*** FYI: No FLAIR found ***"
+fi
+
 
 popd
 # ###
 
+#GM - add exit code for chronic scans 
 
 
 ###
 # Prepare the DWI:
+
+#GM - add mkdir here so only does for acute 
+
 pushd ${output_dwi_dir}
 cp ${input_dwi} .
 
