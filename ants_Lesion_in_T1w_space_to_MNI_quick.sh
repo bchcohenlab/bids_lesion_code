@@ -66,13 +66,15 @@ fi
 # Requires FSL and ants be set-up correctly
 
 ## Inputs:
-	working_dir=$1
+	bids_dir=$1
+	participant=$2
 	
-	T1w_image=$2
-	lesion=$3
+	modality=`ls ${bids_dir}/derivatives/lesions/${participant}/dwi | grep space | cut -d '_' -f2 | cut -d '-' -f2 | sort -u`
+	working_dir=${bids_dir}/derivatives/lesions/${participant}
+	
+	T1w_image=${working_dir}/dwi/${participant}_${modality}.nii.gz
+	lesion=${working_dir}/${participant}_space-${modality}_desc-lesion_mask.nii.gz
 
-	# template=$3
-	# template_name=$4
 	
 	template=code/icbm152_t1_tal_nlin_asym_09c_masked.nii.gz
 	template_name=MNI152NLin2009cAsym # assuming you use the icbm152_t1_tal_nlin_asym_09c_masked.nii.gz file
@@ -84,16 +86,16 @@ fi
 	
 	transform_type=b # I typically use "b": rigid + affine + deformable b-spline syn (3 stages); but "s" sometimes works better
 
-	BIDSPATH=${working_dir}/code # path to scripts
+	BIDSPATH=${working_dir}/code/bids_lesion_code # path to scripts
 	chmod -f a+x ${BIDSPATH}/*sh
 	export PATH="$PATH:${BIDSPATH}"
 
 
 ## Derived file names and paths:
-	T1w_image_name=`remove_ext ${T1w_image}`
-	T1w_brain_mask=${working_dir}/${T1w_image_name}_brain_mask.nii.gz
+	T1w_image_name=`basename ${T1w_image} .nii.gz`
+	T1w_brain_mask=${working_dir}/anat/${participant}_space-${modality}_desc-brain_mask.nii.gz
 	T1w_brain=${working_dir}/${T1w_image_name}_brain.nii.gz
-	lesion_name=`remove_ext ${lesion}`
+	lesion_name=`basename ${lesion} .nii.gz`
 
 
 
@@ -174,7 +176,7 @@ antsApplyTransforms \
 	-t [./warps/${template_name}_${transform_type}_to_${T1w_image_name}_0GenericAffine.mat, 1] \
 	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_1InverseWarp.nii.gz \
 	-n NearestNeighbor \
-	-o ${lesion_name}_space-${template_name}_desc-lesion_mask.nii.gz
+	-o ${participant}_space-${template_name}_desc-lesion_mask.nii.gz
 
 echo "Reducing any FLOAT64 images to FLOAT32; segmentations can be reduced further, but they are already small"
 float64_to_float32.sh
