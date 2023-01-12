@@ -76,7 +76,7 @@ fi
 	lesion=${working_dir}/${participant}_space-${modality}_desc-lesion_mask.nii.gz
 
 	
-	template=code/icbm152_t1_tal_nlin_asym_09c_masked.nii.gz
+	template=code/bids_lesion_code/icbm152_t1_tal_nlin_asym_09c_masked.nii.gz
 	template_name=MNI152NLin2009cAsym # assuming you use the icbm152_t1_tal_nlin_asym_09c_masked.nii.gz file
 	
 
