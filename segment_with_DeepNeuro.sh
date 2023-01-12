@@ -6,7 +6,8 @@
 
 bids_dir=$1
 participant=$2
-reg_target=$3
+
+reg_target=`ls ${bids_dir}/derivatives/lesions/${participant}/dwi | grep space | cut -d '_' -f2 | cut -d '-' -f2 | sort -u`
 
 module load cuda
 #module load singularity
