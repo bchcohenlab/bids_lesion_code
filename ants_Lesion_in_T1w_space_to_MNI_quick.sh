@@ -54,7 +54,7 @@ echo This will use ${ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS} threads at a time
 
 # export ANTSPATH=/Users/alex/repos/opt/bin
 
-if [ $# -lt 3 ] ; then
+if [ $# -lt 2 ] ; then
 	echo "You need to provide THREE (3) inputs..."
 	echo ""
 	echo "Usage: $0 <working_dir> <T1w> <lesion>"
