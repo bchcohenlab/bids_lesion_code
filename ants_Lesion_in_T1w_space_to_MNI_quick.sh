@@ -76,7 +76,7 @@ fi
 	lesion=${working_dir}/${participant}_space-${modality}_desc-lesion_mask.nii.gz
 
 	
-	template=code/bids_lesion_code/icbm152_t1_tal_nlin_asym_09c_masked.nii.gz
+	template=${bids_dir}/code/bids_lesion_code/icbm152_t1_tal_nlin_asym_09c_masked.nii.gz
 	template_name=MNI152NLin2009cAsym # assuming you use the icbm152_t1_tal_nlin_asym_09c_masked.nii.gz file
 	
 
@@ -93,8 +93,9 @@ fi
 
 ## Derived file names and paths:
 	T1w_image_name=`basename ${T1w_image} .nii.gz`
-	T1w_brain_mask=${working_dir}/anat/${participant}_space-${modality}_desc-brain_mask.nii.gz
-	T1w_brain=${working_dir}/${T1w_image_name}_brain.nii.gz
+	T1w_brain_mask=${working_dir}/anat/${participant}_space-${modality}_desc-brain_mask.nii.gz 
+	T1w_brain=${working_dir}/${participant}_space-${modality}_desc-SkullStripped.nii.gz
+	
 	lesion_name=`basename ${lesion} .nii.gz`
 
 
@@ -102,6 +103,7 @@ fi
 ## START OF CODE THAT ACTUALLY DOES STUFF:
 
 # First generate rigid+affine+warp from your T1w to MNI152 target (both should be skull-stripped)
+
 pushd ${working_dir}
 
 if [ -f "${working_dir}/warps/${template_name}_${transform_type}_to_${T1w_image_name}_1Warp.nii.gz" ]; then
@@ -131,7 +133,9 @@ else
 		echo ${T1w_brain}
 	else
 		echo "Making brain only image from ${T1w_image} for registration"
-		fslmaths ${T1w_image} -mas ${T1w_brain_mask} ${T1w_brain}
+		#fslmaths ${T1w_image} -mas ${T1w_brain_mask} ${T1w_brain}
+		bet ${T1w_image} ${T1w_brain} -f 0.5 -g 0
+		
 	fi
 
 	echo "Performing Registration from ${T1w_brain} to ${template_name}"
@@ -142,20 +146,20 @@ else
 	temp_dir=./ants_Temp
 	mkdir -p $temp_dir
 
-	inverse_lesion=${temp_dir}/${T1w_image_name}_inverse_lesion.nii.gz
+	inverse_lesion=${temp_dir}/${T1w_image_name}_inverse_lesion.nii.gz 
 	lesion_masked_T1w_brain=${temp_dir}/${T1w_image_name}_lesioned.nii.gz
 
 	echo "Making lesion masked T1w brain image"
-	ImageMath 3 ${inverse_lesion} Neg ${lesion} # output first
+	ImageMath 3 ${inverse_lesion} Neg ${lesion} # output first 
 	MultiplyImages 3 ${T1w_brain} ${inverse_lesion} ${lesion_masked_T1w_brain} # output last
 
 	antsRegistrationSyNQuick.sh \
 		-d 3 \
-		-m ${template} \
-		-f ${lesion_masked_T1w_brain} \
+		-m ${lesion_masked_T1w_brain} \
+		-f ${template} \
 		-t ${transform_type}\
 		-o ${template_name}_${transform_type}_to_${T1w_image_name}_ \
-		-x ${inverse_lesion} \
+		#-x ${inverse_lesion} \
 		-j 1 
 
 	mkdir -p ./warps
