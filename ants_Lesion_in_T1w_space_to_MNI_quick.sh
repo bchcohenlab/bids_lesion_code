@@ -159,7 +159,6 @@ else
 		-f ${template} \
 		-t ${transform_type}\
 		-o ${template_name}_${transform_type}_to_${T1w_image_name}_ \
-		#-x ${inverse_lesion} \
 		-j 1 
 
 	mkdir -p ./warps
@@ -177,8 +176,8 @@ antsApplyTransforms \
 	-d 3 \
 	-i ${lesion} \
 	-r ${template} \
-	-t [./warps/${template_name}_${transform_type}_to_${T1w_image_name}_0GenericAffine.mat, 1] \
-	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_1InverseWarp.nii.gz \
+	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_0GenericAffine.mat \
+	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_1Warp.nii.gz \
 	-n NearestNeighbor \
 	-o ${participant}_space-${template_name}_desc-lesion_mask.nii.gz
 
