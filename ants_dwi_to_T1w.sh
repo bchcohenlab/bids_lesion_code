@@ -14,10 +14,10 @@ echo This will use ${ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS} threads at a time
 
 working_dir=$1
 participant=$2
-reg_target=$3
 
-template=${working_dir}/${participant}_${reg_target}.nii.gz # This is the T1w
-mask=${working_dir}/${participant}_space-${reg_target}_desc-brain_mask.nii.gz # This is the mask made from the T1w in prior steps
+
+template=${working_dir}/${participant}_T1w.nii.gz # This is the T1w
+mask=${working_dir}/${participant}_space-T1w_desc-brain_mask.nii.gz # This is the mask made from the T1w in prior steps
 orig=${working_dir}/${participant}_desc-b0_dwi.nii.gz # This is the b0 image
 b1000=${working_dir}/${participant}_desc-b1000_dwi.nii.gz # This is the b1000 image
 adc=${working_dir}/${participant}_desc-adc_dwi.nii.gz # This is the adc image
@@ -34,7 +34,7 @@ antsRegistrationSyNQuick.sh \
 	-o ${participant}_space-T1w_desc-b0_dwi
 
 # remove non-BIDS suffix
-mv ${participant}_space-${reg_target}_desc-b0_dwiWarped.nii.gz ${participant}_space-${reg_target}_desc-b0_dwi.nii.gz
+mv ${participant}_space-T1w_desc-b0_dwiWarped.nii.gz ${participant}_space-T1w_desc-b0_dwi.nii.gz
 
 
 # Then we apply the transform to bring the adc into T1w space:
@@ -42,20 +42,20 @@ antsApplyTransforms \
 	-d 3 \
 	-i ${adc} \
 	-r ${Target} \
-	-t ${participant}_space-${reg_target}_desc-b0_dwi1Warp.nii.gz \
-	-t ${participant}_space-${reg_target}_desc-b0_dwi0GenericAffine.mat \
+	-t ${participant}_space-T1w_desc-b0_dwi1Warp.nii.gz \
+	-t ${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
 	-n BSpline \
-	-o ${participant}_space-${reg_target}_desc-adc_dwi.nii.gz
+	-o ${participant}_space-T1w_desc-adc_dwi.nii.gz
 
 # and the b1000 map too:
 antsApplyTransforms \
 	-d 3 \
 	-i ${b1000} \
 	-r ${Target} \
-	-t ${participant}_space-${reg_target}_desc-b0_dwi1Warp.nii.gz \
-	-t ${participant}_space-${reg_target}_desc-b0_dwi0GenericAffine.mat \
+	-t ${participant}_space-T1w_desc-b0_dwi1Warp.nii.gz \
+	-t ${participant}_space-T1w_desc-b0_dwi0GenericAffine.mat \
 	-n BSpline \
-	-o ${participant}_space-${reg_target}_desc-b1000_dwi.nii.gz
+	-o ${participant}_space-T1w_desc-b1000_dwi.nii.gz
 
 # Clean up
 rm *mat
