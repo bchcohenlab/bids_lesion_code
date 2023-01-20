@@ -86,7 +86,7 @@ fi
 	
 	transform_type=b # I typically use "b": rigid + affine + deformable b-spline syn (3 stages); but "s" sometimes works better
 
-	BIDSPATH=${working_dir}/code/bids_lesion_code # path to scripts
+	BIDSPATH=${bids_dir}/code/bids_lesion_code # path to scripts
 	chmod -f a+x ${BIDSPATH}/*sh
 	export PATH="$PATH:${BIDSPATH}"
 
