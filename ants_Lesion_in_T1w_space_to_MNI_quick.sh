@@ -134,7 +134,8 @@ else
 	else
 		echo "Making brain only image from ${T1w_image} for registration"
 		#fslmaths ${T1w_image} -mas ${T1w_brain_mask} ${T1w_brain}
-		bet ${T1w_image} ${T1w_brain} -f 0.5 -g 0
+		#bet ${T1w_image} ${T1w_brain} -f 0.5 -g 0
+		mri_synthstrip -i ${T1w_image} -o ${T1w_brain}
 		
 	fi
 
