@@ -43,7 +43,7 @@ participant=$2
 # Location of dataset code:
 BIDSPATH=${bids_dir}/code/bids_lesion_code # path to scripts
 export PATH="$PATH:${BIDSPATH}"
-export FREESURFER_HOME=/lab-share/Neuro-Cohen-e2/Public/software/freesurfer_dev
+
 
 # Expected input locations:
 input_T1w=${bids_dir}/${participant}/anat/${participant}_T1w.nii.gz
@@ -69,7 +69,15 @@ mkdir -p ${output_anat_dir}
 # # Prepare the T1w (and T2w/FLAIR if present):
 pushd ${output_anat_dir}
 
-# Copy over the T1w, or make one if only clinical scans
+if [ -f "$input_T1w" ]; then
+	reg_target=T1w
+	echo "Registration Target is T1w"
+else
+	reg_target=T2w
+	echo "Registration Target is T2w"
+fi
+
+# Copy over the Registration image, or make one if only clinical scans
 if [ -f "$input_T1w" ]; then
  	cp $input_T1w .
 elif [ -f "$input_T1w_clin" ]; then
@@ -87,49 +95,86 @@ else
 	echo "*** No T1w found ***"
 fi
 
+if [ -f "$input_T2w" ]; then
+ 	cp $input_T2w .
+else
+	echo "*** No T2w found ***"
+	#Combine clinical
+fi
 
 # if needed, make the T1w isovolumetric:
-max_pixelwidth=`fslinfo ${participant}_T1w.nii.gz | grep pixdim[1-3] | awk '{ print $2 }' | sort -rn | head -1`
+max_pixelwidth=`fslinfo ${participant}_${reg_target}.nii.gz | grep pixdim[1-3] | awk '{ print $2 }' | sort -rn | head -1`
 if [ $max_pixelwidth \> 1.5 ];
 then 
 	echo "largest pixel dimension is ${max_pixelwidth} > 1.5mm, reslicing to 1mm isovolumetric";
-	iso.sh ${participant}_T1w.nii.gz 1
-	mv ${participant}_T1w.nii.gz ${participant}_T1w_aniso.nii.gz
-	mv ${participant}_T1w_1mm.nii.gz ${participant}_T1w.nii.gz
+	iso.sh ${participant}_${reg_target}.nii.gz 1
+	mv ${participant}_${reg_target}.nii.gz ${participant}_${reg_target}_aniso.nii.gz
+	mv ${participant}_${reg_target}_1mm.nii.gz ${participant}_${reg_target}.nii.gz
 else
  	echo "largest pixel dimension is ${max_pixelwidth}, leaving image alone";
 fi
 
-# reorient, bias correct, and crop T1w and make a brain mask:
-prep_T1w.sh ${participant}_T1w.nii.gz
 
-# Change brain mask to BIDS compliant name
-mv ${participant}_T1w_brain_mask.nii.gz ${participant}_space-T1w_desc-brain_mask.nii.gz
+if [[ $reg_target = "T1w" ]]; then
+	# reorient, bias correct, and crop T1w and make a brain mask:
+	prep_T1w.sh ${participant}_T1w.nii.gz 
+	
+	# Change brain mask to BIDS compliant name
+	mv ${participant}_T1w_brain_mask.nii.gz ${participant}_space-T1w_desc-brain_mask.nii.gz
+	
+	# clean up temp files:
+	rm -rf ${participant}_T1w.anat
+	mv ${participant}_T1w_orig.nii.gz ${participant}_desc-uncorrected_T1w.nii.gz 
+else
+	T2=${participant}_T2w.nii.gz
+	
+	# reorient T2w and make a brain mask and skull stripped image
+	date; echo "Reorienting to standard orientation"
+    	run $FSLDIR/bin/fslmaths ${T2} ${T2}_orig
+    	run $FSLDIR/bin/fslreorient2std ${T2} > ${T2}_orig2std.mat
+    	run $FSLDIR/bin/convert_xfm -omat ${T2}_std2orig.mat -inverse ${T2}_orig2std.mat
+    	run $FSLDIR/bin/fslreorient2std ${T2} ${T2}
+	
+	mri_synthstrip -i ${participant}_T2w.nii.gz -o ${participant}_space-T2w_desc-SkullStripped.nii.gz -m ${participant}_space-T2w_desc-brain_mask.nii.gz
+	
+	# clean up temp files
 
-# clean up temp files:
-rm -rf ${participant}_T1w.anat
-mv ${participant}_T1w_orig.nii.gz ${participant}_desc-uncorrected_T1w.nii.gz
+fi
 
+echo "Script should end here!" 
 
+exit 
+
+# GM - Skip this for now - Need to update ants_X_to_T1w.sh for T2w flexibility 
 
 # Register T2w and FLAIR to subject space
-if [ -f "$input_T2w" ]; then
- 	cp $input_T2w .
- 	tag=T2w
- 	ants_X_to_T1w.sh $output_anat_dir $participant $tag
-else
-	echo "*** FYI: No T2w found ***"
+if reg_target=T1w; then
+	if [ -f "$input_T2w" ]; then
+ 		cp $input_T2w .
+ 		tag=T2w
+ 		ants_X_to_T1w.sh $output_anat_dir $participant $tag
+	else
+		echo "*** FYI: No T2w found ***"
+	fi
+
+	if [ -f "$input_FLAIR" ]; then
+ 		cp $input_FLAIR .
+ 		tag=FLAIR
+ 		ants_X_to_T1w.sh $output_anat_dir $participant $tag
+	else
+		echo "*** FYI: No FLAIR found ***"
+	fi
+
+elif reg_target=T2w; then
+	if [ -f "$input_FLAIR" ]; then
+ 		cp $input_FLAIR .
+ 		tag=FLAIR
+ 		ants_X_to_T1w.sh $output_anat_dir $participant $tag
+	else
+		echo "*** FYI: No FLAIR found ***"
+	fi
 fi
-
-if [ -f "$input_FLAIR" ]; then
- 	cp $input_FLAIR .
- 	tag=FLAIR
- 	ants_X_to_T1w.sh $output_anat_dir $participant $tag
-else
-	echo "*** FYI: No FLAIR found ***"
-fi
-
-
+	
 
 popd
 # ###
@@ -160,11 +205,11 @@ else
 fi
 
 # Copy over the cleaned (and isovolumetric) T1w file:
-cp ${output_anat_dir}/${participant}_T1w.nii.gz .
-cp ${output_anat_dir}/${participant}_space-T1w_desc-brain_mask.nii.gz .
+cp ${output_anat_dir}/${participant}_${reg_target}.nii.gz .
+cp ${output_anat_dir}/${participant}_space-${reg_target}_desc-brain_mask.nii.gz .
 
 # Now register the b0 to the T1w and apply the transform to the adc and b1000 maps as well:
-ants_dwi_to_T1w.sh $output_dwi_dir $participant 
+ants_dwi_to_T1w.sh $output_dwi_dir $participant #GM - Update for T2w flexibility
 
 
 echo "You should be ready to go, use the following files in the ${output_dwi_dir} directory to trace lesions:"
