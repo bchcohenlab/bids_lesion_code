@@ -138,7 +138,7 @@ else
 	mri_synthstrip -i ${participant}_T2w.nii.gz -o ${participant}_space-T2w_desc-SkullStripped.nii.gz -m ${participant}_space-T2w_desc-brain_mask.nii.gz
 	
 	# clean up temp files
-
+	rm ${participant}_T2w.nii.gz_orig2std.mat
 fi
 
 echo "Script should end here!" 
