@@ -82,15 +82,15 @@ if [ -f "$input_T1w" ]; then
  	cp $input_T1w .
 elif [ -f "$input_T1w_clin" ]; then
 	echo "*** No single T1w found, making a consolidated one ***"
-	cp ${bids_dir}/${participant}/anat/${participant}_acq-*_T1w.nii.gz .
-	count=1
-	for i in `find . -name "*acq*T1*nii.gz"`; do 
-		eval acq${count}=`echo $i | rev | cut -d '_' -f2 | rev`
-		count=$((count+1))
-	done
-	echo "*** Consolidating $acq1 $acq2 $acq3 ***"
-	combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3 #GM - make loop in this script better (ex in ants_dwi_to_t1w.sh?)
-	acq1= ; acq2= ; acq3=
+	#cp ${bids_dir}/${participant}/anat/${participant}_acq-*_T1w.nii.gz .
+	#count=1
+	#for i in `find . -name "*acq*T1*nii.gz"`; do 
+	#	eval acq${count}=`echo $i | rev | cut -d '_' -f2 | rev`
+	#	count=$((count+1))
+	#done
+	#echo "*** Consolidating $acq1 $acq2 $acq3 ***"
+	#combine_clinical_ax_cor_T1w.sh ${output_anat_dir} ${participant} $acq1 $acq2 $acq3 #GM - make loop in this script better (ex in ants_dwi_to_t1w.sh?)
+	#acq1= ; acq2= ; acq3=
 else
 	echo "*** No T1w found ***"
 fi
@@ -115,43 +115,42 @@ else
 fi
 
 
-if [[ $reg_target = "T1w" ]]; then
+#if [[ $reg_target = "T1w" ]]; then
 	# reorient, bias correct, and crop T1w and make a brain mask:
-	prep_T1w.sh ${participant}_T1w.nii.gz 
+	prep_T1w.sh ${participant}_${reg_target}.nii.gz 
 	
 	# Change brain mask to BIDS compliant name
-	mv ${participant}_T1w_brain_mask.nii.gz ${participant}_space-T1w_desc-brain_mask.nii.gz
+	mv ${participant}_${reg_target}_brain_mask.nii.gz ${participant}_space-${reg_target}_desc-brain_mask.nii.gz
 	
 	# clean up temp files:
-	rm -rf ${participant}_T1w.anat
-	mv ${participant}_T1w_orig.nii.gz ${participant}_desc-uncorrected_T1w.nii.gz 
-else
-	T2=${participant}_T2w.nii.gz
+	rm -rf ${participant}_${reg_target}.anat
+	mv ${participant}_${reg_target}_orig.nii.gz ${participant}_desc-uncorrected_${reg_target}.nii.gz 
+#else
+	#T2=${participant}_T2w.nii.gz
 	
 	# reorient T2w and make a brain mask and skull stripped image
-	date; echo "Reorienting to standard orientation"
-    	run $FSLDIR/bin/fslmaths ${T2} ${T2}_orig
-    	run $FSLDIR/bin/fslreorient2std ${T2} > ${T2}_orig2std.mat
-    	run $FSLDIR/bin/convert_xfm -omat ${T2}_std2orig.mat -inverse ${T2}_orig2std.mat
-    	run $FSLDIR/bin/fslreorient2std ${T2} ${T2}
+	#date; echo "Reorienting to standard orientation"
+    	#run $FSLDIR/bin/fslmaths ${T2} ${T2}_orig
+    	#run $FSLDIR/bin/fslreorient2std ${T2} > ${T2}_orig2std.mat
+    	#run $FSLDIR/bin/convert_xfm -omat ${T2}_std2orig.mat -inverse ${T2}_orig2std.mat
+    	#run $FSLDIR/bin/fslreorient2std ${T2} ${T2}
 	
-	mri_synthstrip -i ${participant}_T2w.nii.gz -o ${participant}_space-T2w_desc-SkullStripped.nii.gz -m ${participant}_space-T2w_desc-brain_mask.nii.gz
+	#mri_synthstrip -i ${participant}_T2w.nii.gz -o ${participant}_space-T2w_desc-SkullStripped.nii.gz -m ${participant}_space-T2w_desc-brain_mask.nii.gz
 	
 	# clean up temp files
-	rm ${participant}_T2w.nii.gz_orig2std.mat
+	#rm ${participant}_T2w.nii.gz_orig2std.mat
 	
 	# move skull stripped image 
-	mv ${participant}_space-T2w_desc-SkullStripped.nii.gz ${bids_dir}/derivatives/lesions/${participant}/
-fi
+	#mv ${participant}_space-T2w_desc-SkullStripped.nii.gz ${bids_dir}/derivatives/lesions/${participant}/
+#fi
 
 
 
-# GM - Skip this for now - Need to update ants_X_to_T1w.sh for T2w flexibility 
+# GM  - Need to update ants_X_to_T1w.sh for T2w flexibility 
 
 # Register T2w and FLAIR to subject space
 if reg_target=T1w; then
 	if [ -f "$input_T2w" ]; then
- 		cp $input_T2w .
  		tag=T2w
  		ants_X_to_T1w.sh $output_anat_dir $participant $tag
 	else
@@ -161,7 +160,7 @@ if reg_target=T1w; then
 	if [ -f "$input_FLAIR" ]; then
  		cp $input_FLAIR .
  		tag=FLAIR
- 		ants_X_to_T1w.sh $output_anat_dir $participant $tag
+ 		ants_X_to_T1w.sh $output_anat_dir $participant $tag $reg_target
 	else
 		echo "*** FYI: No FLAIR found ***"
 	fi
@@ -170,7 +169,7 @@ elif reg_target=T2w; then
 	if [ -f "$input_FLAIR" ]; then
  		cp $input_FLAIR .
  		tag=FLAIR
- 		ants_X_to_T1w.sh $output_anat_dir $participant $tag
+ 		ants_X_to_T1w.sh $output_anat_dir $participant $tag $reg_target
 	else
 		echo "*** FYI: No FLAIR found ***"
 	fi
@@ -180,6 +179,7 @@ fi
 popd
 # ###
 
+exit
 #GM - add exit code for chronic scans 
 
 
