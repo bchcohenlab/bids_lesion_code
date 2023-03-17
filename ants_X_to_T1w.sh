@@ -38,3 +38,4 @@ mv ${participant}_space-${reg_target}_${tag}Warped.nii.gz ${participant}_space-$
 # Clean up
 rm *mat
 rm *Warp.nii.gz
+rm *InverseWarped.nii.gz
