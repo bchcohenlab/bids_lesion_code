@@ -159,6 +159,7 @@ else
 		-m ${lesion_masked_T1w_brain} \
 		-f ${template} \
 		-t ${transform_type}\
+		-x ,${lesion}\
 		-o ${template_name}_${transform_type}_to_${T1w_image_name}_ \
 		-j 1 
 
