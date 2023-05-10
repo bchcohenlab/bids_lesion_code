@@ -179,9 +179,12 @@ fi
 popd
 # ###
 
-exit
-#GM - add exit code for chronic scans 
+#exit if no DWI (i.e. for chronic scans)
 
+if [ -f "$input_dwi" ]; then
+	echo "**** FYI no DWI found ****"
+	exit
+fi
 
 ###
 # Prepare the DWI:
