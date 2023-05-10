@@ -146,7 +146,6 @@ fi
 
 
 
-# GM  - Need to update ants_X_to_T1w.sh for T2w flexibility 
 
 # Register T2w and FLAIR to subject space
 if reg_target=T1w; then
@@ -213,7 +212,7 @@ cp ${output_anat_dir}/${participant}_${reg_target}.nii.gz .
 cp ${output_anat_dir}/${participant}_space-${reg_target}_desc-brain_mask.nii.gz .
 
 # Now register the b0 to the T1w and apply the transform to the adc and b1000 maps as well:
-ants_dwi_to_T1w.sh $output_dwi_dir $participant $reg_target #GM - Update for T2w flexibility
+ants_dwi_to_T1w.sh $output_dwi_dir $participant $reg_target 
 
 
 echo "You should be ready to go, use the following files in the ${output_dwi_dir} directory to trace lesions:"
