@@ -18,6 +18,7 @@ BIDSPATH=${bids_dir}/code/bids_lesion_code
 # Expected input locations:
 b0=${participant}_space-${reg_target}_desc-b0_dwi.nii.gz # This is the b0 image
 b1000=${participant}_space-${reg_target}_desc-b1000_dwi.nii.gz # This is the b1000 image
+adc=${participant}_space-${reg_target}_desc-adc_dwi.nii.gz
 input_dir=${bids_dir}/derivatives/lesions/${participant}/dwi 
 
 # Output location:
@@ -26,6 +27,7 @@ mkdir -p ${output_dir}
 
 cp ${input_dir}/${b0} ${output_dir}
 cp ${input_dir}/${b1000} ${output_dir}
+cp ${input_dir}/${adc} ${output_dir}
 
 # Run the DeepNeuro docker (requires CUDA)
 singularity exec --nv \
