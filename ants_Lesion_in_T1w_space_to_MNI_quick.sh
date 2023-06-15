@@ -147,20 +147,20 @@ else
 	temp_dir=./ants_Temp
 	mkdir -p $temp_dir
 
-	inverse_lesion=${temp_dir}/${T1w_image_name}_inverse_lesion.nii.gz 
+	inverse_lesion=${temp_dir}/${T1w_image_name}_inverse_lesion.nii.gz
 	lesion_masked_T1w_brain=${temp_dir}/${T1w_image_name}_lesioned.nii.gz
 
 	echo "Making lesion masked T1w brain image"
-	ImageMath 3 ${inverse_lesion} Neg ${lesion} # output first 
+	ImageMath 3 ${inverse_lesion} Neg ${lesion} # output first
 	MultiplyImages 3 ${T1w_brain} ${inverse_lesion} ${lesion_masked_T1w_brain} # output last
 
 	antsRegistrationSyNQuick.sh \
 		-d 3 \
-		-m ${lesion_masked_T1w_brain} \
-		-f ${template} \
+		-m ${template} \
+		-f ${lesion_masked_T1w_brain} \
 		-t ${transform_type}\
-		-x ,${lesion}\
 		-o ${template_name}_${transform_type}_to_${T1w_image_name}_ \
+		-x ${inverse_lesion} \
 		-j 1 
 
 	mkdir -p ./warps
@@ -178,13 +178,14 @@ antsApplyTransforms \
 	-d 3 \
 	-i ${lesion} \
 	-r ${template} \
-	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_0GenericAffine.mat \
-	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_1Warp.nii.gz \
+	-t [./warps/${template_name}_${transform_type}_to_${T1w_image_name}_0GenericAffine.mat, 1] \
+	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_1InverseWarp.nii.gz \
 	-n NearestNeighbor \
-	-o ${participant}_space-${template_name}_desc-lesion_mask.nii.gz
+	-o ${lesion_name}_space-${template_name}_desc-lesion_mask.nii.gz
 
-echo "Reducing any FLOAT64 images to FLOAT32; segmentations can be reduced further, but they are already small"
+ echo "Reducing any FLOAT64 images to FLOAT32; segmentations can be reduced further, but they are already small"
 float64_to_float32.sh
 
 popd
 
+ 
