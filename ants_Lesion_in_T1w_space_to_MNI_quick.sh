@@ -69,10 +69,10 @@ fi
 	bids_dir=$1
 	participant=$2
 	
-	modality=`ls ${bids_dir}/derivatives/lesions/${participant}/dwi | grep space | cut -d '_' -f2 | cut -d '-' -f2 | sort -u`
+	modality=`ls ${bids_dir}/derivatives/lesions/${participant}/anat | grep space | cut -d '_' -f2 | cut -d '-' -f2 | sort -u`
 	working_dir=${bids_dir}/derivatives/lesions/${participant}
 	
-	T1w_image=${working_dir}/dwi/${participant}_${modality}.nii.gz
+	T1w_image=${working_dir}/anat/${participant}_${modality}.nii.gz
 	lesion=${working_dir}/${participant}_space-${modality}_desc-lesion_mask.nii.gz
 
 	
