@@ -92,11 +92,11 @@ fi
 
 
 ## Derived file names and paths:
-	T1w_image_name=`basename ${T1w_image} .nii.gz`
+	T1w_image_name=`basename -s .nii.gz ${T1w_image}`
 	T1w_brain_mask=${working_dir}/anat/${participant}_space-${modality}_desc-brain_mask.nii.gz 
 	T1w_brain=${working_dir}/${participant}_space-${modality}_desc-SkullStripped.nii.gz
 	
-	lesion_name=`basename ${lesion} .nii.gz`
+	lesion_name=`basename -s .nii.gz ${lesion}`
 
 
 
