@@ -165,7 +165,7 @@ else
 
 	mkdir -p ./warps
 	mv ${template_name}_${transform_type}_to_${T1w_image_name}_* ./warps
-	cp ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_InverseWarped.nii.gz ${T1w_image_name}_space-${template_name}_desc-SkullStripped_T1w.nii.gz
+	cp ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_InverseWarped.nii.gz ${T1w_image_name}_space-${template_name}_desc-SkullStripped.nii.gz
 	rm -rf ants_Temp
 fi
 
