@@ -181,7 +181,7 @@ antsApplyTransforms \
 	-t [./warps/${template_name}_${transform_type}_to_${T1w_image_name}_0GenericAffine.mat, 1] \
 	-t ./warps/${template_name}_${transform_type}_to_${T1w_image_name}_1InverseWarp.nii.gz \
 	-n NearestNeighbor \
-	-o ${lesion_name}_space-${template_name}_desc-lesion_mask.nii.gz
+	-o ${T1w_image_name}_space-${template_name}_desc-lesion_mask.nii.gz
 
  echo "Reducing any FLOAT64 images to FLOAT32; segmentations can be reduced further, but they are already small"
 float64_to_float32.sh
